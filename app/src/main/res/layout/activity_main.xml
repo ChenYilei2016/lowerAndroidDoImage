@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chenyilei.mydoimage.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <!-- 顶部添加文字 -->
+    <RelativeLayout
+        android:id="@+id/Layout_top"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="选择图片"
+            android:textSize="25sp" />
+    </RelativeLayout>
+    <!-- 底部按钮 -->
+    <RelativeLayout
+        android:id="@+id/Layout_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="上传信息"
+            android:textSize="20sp" />
+    </RelativeLayout>
+    <!-- 显示图片 -->
+    <RelativeLayout
+        android:id="@+id/Content_Layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/Layout_bottom"
+        android:layout_below="@id/Layout_top"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="616dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="21dp"
+            android:orientation="vertical">
+            <!-- 设置运行多行 设置圆角图形 黑色字体-->
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="385dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:background="@drawable/editview_shape"
+                android:hint="  说点什么..."
+                android:maxLength="500"
+                android:singleLine="false"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+            <!-- 网格显示图片 行列间距5dp 每列宽度90dp -->
+            <GridView
+                android:id="@+id/gridView1"
+                android:layout_width="wrap_content"
+                android:layout_height="492dp"
+                android:layout_margin="10dp"
+                android:background="#EFDFDF"
+                android:gravity="center"
+
+                android:verticalSpacing="5dp"></GridView>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
+
