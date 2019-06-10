@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -591,6 +592,7 @@ public class ProcessActivity extends Activity implements OnSeekBarChangeListener
                     } else if(flagWatch3 == 1) {
                         flagWatch3 =0;
                     }
+
                 }
             });
             LinearLayout layoutWatch1 = (LinearLayout) customView.findViewById(R.id.layout_watch1);
@@ -808,7 +810,7 @@ public class ProcessActivity extends Activity implements OnSeekBarChangeListener
                     textShow.setText("图像处理--框架模式三");
                     popupWindow4.dismiss();
                     //获取相框 自定义函数getImageFromAssets 获取assets中资源
-                    Bitmap frameBitmap = getImageFromAssets("image_frame_3.png");
+                    Bitmap frameBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.image_frame_3);
                     //显示图像并增加相框
                     mbmp = frameProcess.addFrameToImage(bmp,frameBitmap);
                     imageShow.setImageBitmap(mbmp);
@@ -820,7 +822,7 @@ public class ProcessActivity extends Activity implements OnSeekBarChangeListener
                 public void onClick(View v) {
                     textShow.setText("图像处理--框架模式二");
                     popupWindow4.dismiss();
-                    Bitmap frameBitmap = getImageFromAssets("image_frame_2.png");
+                    Bitmap frameBitmap =  BitmapFactory.decodeResource(getResources(),R.drawable.image_frame_2);
                     mbmp = frameProcess.addFrameToImage(bmp,frameBitmap);
                     imageShow.setImageBitmap(mbmp);
                 }
@@ -831,7 +833,7 @@ public class ProcessActivity extends Activity implements OnSeekBarChangeListener
                 public void onClick(View v) {
                     textShow.setText("图像处理--框架模式一");
                     popupWindow4.dismiss();
-                    Bitmap frameBitmap = getImageFromAssets("image_frame_1.png");
+                    Bitmap frameBitmap =  BitmapFactory.decodeResource(getResources(),R.drawable.image_frame_1);
                     mbmp = frameProcess.addFrameToImage(bmp,frameBitmap);
                     imageShow.setImageBitmap(mbmp);
                 }
