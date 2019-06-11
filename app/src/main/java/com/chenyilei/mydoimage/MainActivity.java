@@ -1,9 +1,5 @@
 package com.chenyilei.mydoimage;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -32,19 +28,28 @@ import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
-//******************************************************************************
-// 参考资料
-// http://blog.csdn.net/xiaanming/article/details/18730223
-// http://www.cnblogs.com/linjiqin/archive/2011/02/23/1962535.html 九宫格
-// http://www.linuxidc.com/Linux/2011-08/41819.htm
-// Android应用开发揭秘
-// http://bbs.csdn.net/topics/390660734
-// http://blog.csdn.net/lujianfeiccie2009/article/details/7827771
-//******************************************************************************
 
 public class MainActivity extends Activity {
+	private String myPath = "";
 
 	private GridView gridView1;                 //网格显示缩略图
 	private Button buttonPublish;              //发布按钮
@@ -71,6 +76,9 @@ public class MainActivity extends Activity {
 	//插入PublishId通过Json解析
 	private String publishIdByJson;
 
+	public void show(String msg){
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +98,56 @@ public class MainActivity extends Activity {
 		buttonPublish = (Button) findViewById(R.id.button1);
 		editText = (EditText) findViewById(R.id.editText1);
 
+        /**
+         * 获得图片
+         * 获得消息
+         *
+         * 上传图片和信息
+         *
+         */
 		//发布内容
 		buttonPublish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				if(myPath == null || "".equals(myPath)){
+					show("没有上传图片");
+					return ;
+				}
+
+			    String msg = editText.getText().toString();
+				File file = new File(myPath);
+				System.err.println("大小:"+file.length());
+
+				MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+				requestBody.addFormDataPart("file",file.getName(),RequestBody.create(null, file));
+				requestBody.addFormDataPart("message",msg);
+
+				//TODO: 进行网络请求
+				//一定要另外一个线程?
+				OkHttpClient okHttpClient = new OkHttpClient();
+				Request request = new Request.Builder()
+						.url("http://106.12.74.218:9090/uploadFile")
+						.post(requestBody.build())
+						.build();
+				Call call = okHttpClient.newCall(request);
+				call.timeout().timeout(10, TimeUnit.SECONDS);
+				call.enqueue(new Callback() {
+					@Override
+					public void onFailure(Call call, IOException e) {
+						System.err.println("失败"+e.getMessage());
+						runOnUiThread(()->{
+							show("上传图片失败!");
+						});
+					}
+					@Override
+					public void onResponse(Call call, Response response) throws IOException {
+						System.err.println(response.body().string());
+						runOnUiThread(()->{
+							show("上传图片成功!");
+						});
+					}
+				});
 
 				/*
 				 * 上传图片 进度条显示
@@ -107,9 +161,9 @@ public class MainActivity extends Activity {
 					return;
 				}
 
-				//消息提示
-				Toast.makeText(MainActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
-			}
+
+
+            }
 		});
 
 		/*
@@ -196,6 +250,8 @@ public class MainActivity extends Activity {
 				cursor.moveToFirst();
 				String path = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Images.Media.DATA));
+				myPath = path;
+                System.err.println("图片路径:"+path);
 				//向处理活动传递数据
 				//Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(this, ProcessActivity.class); //主活动->处理活动
